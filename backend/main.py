@@ -1,15 +1,19 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 
-from database import init_db
-from models import User
-import crud
+from routers import admin_router
+from database.database import engine, Base
 
-app = FastAPI()
+Base.metadata.create_all(bind=engine)
 
-init_db()
+# Initialize FastAPI app
+app = FastAPI(
+    title="PAWS API",
+    description="Simple user registration API",
+    version="1.0.0"
+)
 
+# Allow cross-origin requests (adjust in production)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,17 +22,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class SigninRequest(BaseModel):
-    username: str
-    password: str
-
-@app.get("/")
-def root():
-    return {"message": "CRUD API running"}
-
-@app.post("/api/auth/signin")
-def signin(data: SigninRequest):
-    return {
-        "message": "Request received",
-        "data": data
-    }
+app.include_router(admin_router.router)

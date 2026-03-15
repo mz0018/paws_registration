@@ -1,0 +1,15 @@
+# Ignore environment variables (contains sensitive credentials)
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE
+.idea/
+.vscode/
+
+# Database
+*.db
+*.sqlite
