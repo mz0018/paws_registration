@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
+from starlette.responses import JSONResponse
 
 from schemas.admin_schema import Admin as AdminSchema
 from models.models import Admin as AdminModel
@@ -33,11 +34,18 @@ class AuthService:
                 "sub": db_user.email
             })
 
-            return {
-                "message": "Login successful",
-                "access_token": token,
-                "token_type": "bearer"
-            }
+            response = JSONResponse(content={"message": "Login successful"})
+
+            response.set_cookie(
+                key="access_token",
+                value=token,
+                httponly=True,
+                samesite="lax", #change this line to 'strict' in production
+                secure=False # this one too, set it to 'True'
+                #max_age=3600 #comment out this too
+            )
+
+            return response
 
         except HTTPException:
             raise

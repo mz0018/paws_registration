@@ -1,11 +1,10 @@
 import { useState } from "react";
-import api from "../services/api";
+import { signin } from "../services/authService";
 
 type FieldName = "email" | "password";
 
 export const useSignin = () => {
   const [loading, setLoading] = useState(false);
-
   const [formData, setFormData] = useState<Record<FieldName, string>>({
     email: "",
     password: "",
@@ -18,13 +17,9 @@ export const useSignin = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      const response = await api.post("/auth/signin", formData);
-
-      console.log("API RESPONSE:", response.data);
-      console.log(formData)
-
+      const data = await signin(formData.email, formData.password);
+      console.log("Logged in:", data);
     } catch (error) {
       console.error("Sign-in failed:", error);
     } finally {
@@ -34,3 +29,6 @@ export const useSignin = () => {
 
   return { formData, handleChange, handleSubmit, loading };
 };
+
+//Authentication flow
+//api.ts -> authService.ts -> useSignin.tsx
