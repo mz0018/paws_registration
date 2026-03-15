@@ -8,7 +8,8 @@ from starlette import status
 
 from schemas.admin_schema import Admin
 from database.database import get_db
-from services.auth_service import login_user
+from services import auth_service
+from services.auth_service import AuthService
 
 router = APIRouter(prefix="/api/auth", tags=["Admin"])
 
@@ -18,4 +19,14 @@ def root():
 
 @router.post("/signin", status_code=status.HTTP_201_CREATED)
 def auth_user(user: Admin, db: Session = Depends(get_db)):
-    return login_user(user, db)
+
+    auth_service = AuthService(db)
+
+    return auth_service.login_user(user)
+
+# @router.post("/signup", status_code=status.HTTP_201_CREATED)
+# def reg_user(user: Admin, db: Session = Depends(get_db)):
+#
+#     auth_service = AuthService(db)
+#
+#     return auth_service.create_user(user)
