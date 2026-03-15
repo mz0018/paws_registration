@@ -1,13 +1,13 @@
 import { useState } from "react";
 import api from "../services/api";
 
-type FieldName = "username" | "password";
+type FieldName = "email" | "password";
 
 export const useSignin = () => {
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState<Record<FieldName, string>>({
-    username: "",
+    email: "",
     password: "",
   });
 
@@ -23,6 +23,7 @@ export const useSignin = () => {
       const response = await api.post("/auth/signin", formData);
 
       console.log("API RESPONSE:", response.data);
+      console.log(formData)
 
     } catch (error) {
       console.error("Sign-in failed:", error);

@@ -2,7 +2,7 @@ import { useSignin } from "./hooks/useSignin";
 import type { ChangeEvent } from "react";
 
 type InputField = {
-  name: "username" | "password";
+  name: "email" | "password";
   type: string;
   placeholder: string;
 };
@@ -11,7 +11,7 @@ const App = () => {
   const { formData, handleChange, handleSubmit, loading } = useSignin();
 
   const inputs: InputField[] = [
-    { name: "username", type: "text", placeholder: "Username" },
+    { name: "email", type: "text", placeholder: "Email" },
     { name: "password", type: "password", placeholder: "Password" },
   ];
 
