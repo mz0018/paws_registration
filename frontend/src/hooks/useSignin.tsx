@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { signin } from "../services/authService";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../stores/AuthStore";
 
 type FieldName = "email" | "password";
 
-export const useSignin = () => {
+export const useSignin = (redirectTo: string = "/dashboard") => {
+  const navigate = useNavigate();
+  const setAuth = useAuthStore((state) => state.setAuth);
+
   const [loading, setLoading] = useState(false);
   const [hasError, setError] = useState<{ message?: string }>({});
 
@@ -20,9 +25,14 @@ export const useSignin = () => {
     e.preventDefault();
     setLoading(true);
     setError({});
+
     try {
       const data = await signin(formData.email, formData.password);
-      console.log("Logged in:", data);
+
+      setAuth(data);
+
+      navigate(redirectTo);
+
     } catch (err: any) {
 
       const detail = err.response?.data?.detail;
@@ -40,6 +50,3 @@ export const useSignin = () => {
 
   return { formData, handleChange, handleSubmit, loading, hasError };
 };
-
-//Authentication flow
-//api.ts -> authService.ts -> useSignin.tsx
