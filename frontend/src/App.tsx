@@ -8,7 +8,7 @@ type InputField = {
 };
 
 const App = () => {
-  const { formData, handleChange, handleSubmit, loading } = useSignin();
+  const { formData, handleChange, handleSubmit, loading, hasError } = useSignin();
 
   const inputs: InputField[] = [
     { name: "email", type: "text", placeholder: "Email" },
@@ -33,6 +33,10 @@ const App = () => {
             }
           />
         ))}
+
+        {hasError.message && (
+          <small className="text-red-500 capitalize bg-red-100 border border-red-500 p-2 rounded">{hasError.message}</small>
+        )}
 
         <button
           type="submit"

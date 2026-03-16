@@ -5,6 +5,8 @@ type FieldName = "email" | "password";
 
 export const useSignin = () => {
   const [loading, setLoading] = useState(false);
+  const [hasError, setError] = useState<{ message?: string }>({});
+
   const [formData, setFormData] = useState<Record<FieldName, string>>({
     email: "",
     password: "",
@@ -17,17 +19,26 @@ export const useSignin = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setError({});
     try {
       const data = await signin(formData.email, formData.password);
       console.log("Logged in:", data);
-    } catch (error) {
-      console.error("Sign-in failed:", error);
+    } catch (err: any) {
+
+      const detail = err.response?.data?.detail;
+
+      const message =
+        Array.isArray(detail) ? detail[0]?.msg :
+        detail || "Something went wrong";
+
+      setError({ message });
+
     } finally {
       setLoading(false);
     }
   };
 
-  return { formData, handleChange, handleSubmit, loading };
+  return { formData, handleChange, handleSubmit, loading, hasError };
 };
 
 //Authentication flow
