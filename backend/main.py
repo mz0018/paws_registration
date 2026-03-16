@@ -1,19 +1,17 @@
+# main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-from routers import admin_router
 from database.database import engine, Base
+from utils.rate_limiter import RateLimiter
 
 Base.metadata.create_all(bind=engine)
 
-# Initialize FastAPI app
 app = FastAPI(
     title="PAWS API",
     description="Simple user registration API",
     version="1.0.0"
 )
 
-# Allow cross-origin requests (adjust in production)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -21,5 +19,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Initialize rate limiter correctly
+rate_limiter = RateLimiter(app)
+
+from routers import admin_router
 
 app.include_router(admin_router.router)

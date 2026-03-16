@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 from starlette import status
 
@@ -11,6 +11,8 @@ from database.database import get_db
 from services import auth_service
 from services.auth_service import AuthService
 
+from main import rate_limiter
+
 router = APIRouter(prefix="/api/auth", tags=["Admin"])
 
 @router.get("/")
@@ -18,10 +20,9 @@ def root():
     return {"Hello": "World"}
 
 @router.post("/signin", status_code=status.HTTP_201_CREATED)
-def auth_user(user: Admin, db: Session = Depends(get_db)):
-
+@rate_limiter.limit("5/minute")  # limit to 5 login attempts per minute
+def auth_user(request: Request, user: Admin, db: Session = Depends(get_db)):
     auth_service = AuthService(db)
-
     return auth_service.login_user(user)
 
 # @router.post("/signup", status_code=status.HTTP_201_CREATED)
