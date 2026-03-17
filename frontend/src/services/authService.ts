@@ -5,13 +5,13 @@ export const signin = async (email: string, password: string) => {
   return response.data;
 };
 
-export const checkAuth = async () => {
-  const response = await api.get("/auth/me");
-  return response.data;
-}
+// export const checkAuth = async () => {
+//   const response = await api.get("/auth/me");
+//   return response.data;
+// }
 
-export const logout = async () => {
-  await api.post("/auth/logout");
+export const signout = async () => {
+  await api.post("/auth/signout");
 };
 
 //Authentication flow

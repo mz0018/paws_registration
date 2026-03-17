@@ -52,6 +52,17 @@ class AuthService:
         except Exception:
             raise HTTPException(status_code=500, detail="Something went wrong")
 
+
+    def logout_user(self, response: JSONResponse):
+        response.delete_cookie(
+            key="access_token",
+            httponly=False,
+            samesite="lax",
+            secure=False
+        )
+
+        return { "message": "Logout successful" }
+
     # def create_user(self, user: Admin):
     #
     #     try:
