@@ -9,7 +9,7 @@ type InputField = {
 
 const Login = () => {
   const { formData, handleChange, handleSubmit, loading, hasError } =
-    useSignin("/dashboard");
+    useSignin("/admin");
 
   const inputs: InputField[] = [
     { name: "email", type: "text", placeholder: "Email" },

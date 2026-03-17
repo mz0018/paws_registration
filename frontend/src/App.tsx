@@ -1,6 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
+import AdminLayout from "./components/layout/AdminLayout";
+import DashboardHome from "./pages/DashboardHome";
+import Analytics from "./pages/Analytics";
+import Settings from "./pages/Settings";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const App = () => {
@@ -10,15 +13,20 @@ const App = () => {
         <Route path="/" element={<Navigate to="login" replace />} />
         <Route path="/login" element={<Login />} />
 
+        {/* <Route path="/dashboard" element={<Navigate to="/admin" replace />} /> */}
+
         <Route
-          path="/dashboard"
+          path="/admin"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <AdminLayout />
             </ProtectedRoute>
           }
-        />
-
+        >
+          <Route index element={<DashboardHome />} />
+          <Route path="analytics" element={<Analytics />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
