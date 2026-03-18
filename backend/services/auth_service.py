@@ -1,3 +1,7 @@
+import pytesseract
+import io
+from PIL import Image, ImageFilter
+
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from starlette.responses import JSONResponse
@@ -63,23 +67,23 @@ class AuthService:
 
         return { "message": "Logout successful" }
 
-    # def create_user(self, user: Admin):
-    #
-    #     try:
-    #         hashed_password = hash_password(user.password)
-    #
-    #         new_user = Admin(
-    #             email=user.email,
-    #             password=hashed_password
-    #         )
-    #
-    #         self.db.add(new_user)
-    #         self.db.commit()
-    #         self.db.refresh(new_user)
-    #
-    #         return {
-    #             "message": "User created successfully",
-    #             "email": new_user.email,
-    #         }
-    #     except Exception:
-    #         raise HTTPException(status_code=500, detail="Something went wrong")
+    def verify_id(self, file: UploadFile):
+        contents = file.file.read()
+
+        img = Image.open(io.BytesIO(contents))
+
+        img = img.convert("L")
+        img = img.filter(ImageFilter.SHARPEN)
+
+        img = img.point(lambda x: 0 if x < 140 else 255)
+
+        text = pytesseract.image_to_string(img, config="--psm 6")
+
+        print("Extracted text:", text)
+
+        return {
+            "filename": file.filename,
+            "message": "Image processed successfully",
+            "converted_text": text
+        }
+

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request, Response
+from fastapi import APIRouter, Depends, Request, Response, UploadFile, File
 from sqlalchemy.orm import Session
 from starlette import status
 
@@ -30,9 +30,11 @@ def auth_user(request: Request, user: Admin, db: Session = Depends(get_db)):
     auth_service = AuthService(db)
     return auth_service.login_user(user)
 
-# @router.post("/signup", status_code=status.HTTP_201_CREATED)
-# def reg_user(user: Admin, db: Session = Depends(get_db)):
-#
-#     auth_service = AuthService(db)
-#
-#     return auth_service.create_user(user)
+@router.post("/scan-img")
+def scan_id(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db)
+):
+    auth_service = AuthService(db)
+    return auth_service.verify_id(file)
+
