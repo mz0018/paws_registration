@@ -1,15 +1,14 @@
 # main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from database.database import engine, Base
 from utils.rate_limiter import RateLimiter
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="PAWS API",
-    description="Simple user registration API",
-    version="1.0.0"
+    title="PAWS API", description="Simple user registration API", version="1.0.0"
 )
 
 app.add_middleware(
@@ -19,6 +18,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve uploaded images
+import os
+
+uploads_dir = os.path.join(os.path.dirname(__file__), "uploads")
+os.makedirs(uploads_dir, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 # Initialize rate limiter correctly
 rate_limiter = RateLimiter(app)

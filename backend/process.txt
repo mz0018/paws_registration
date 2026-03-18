@@ -1,0 +1,31 @@
+Done1. Frontend opens camera (getUserMedia)
+Done2. Capture image of the card/document
+Done3. Client-side preprocessing
+   - crop document/card
+   - resize/compress image
+   - basic blur detection
+Done4. Preview image with retake option (optional)
+Done5. Upload image to backend via API (multipart/form-data or upload to object storage)
+
+6. Backend receives image or storage URL
+7. Image preprocessing
+   - orientation correction
+   - noise cleanup
+   - contrast enhancement
+
+8. Document/Card detection
+   - locate card boundaries
+   - isolate relevant region
+
+9. OCR processing
+   - extract raw text from image
+
+10. Data extraction & parsing
+   - identify fields (e.g., vet name, ID)
+   - use regex/template/AI parsing
+
+11. Validation & normalization
+   - format fields
+   - verify patterns (ID format, name cleanup)
+
+12. Return structured JSON response
